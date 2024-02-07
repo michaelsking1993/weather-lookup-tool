@@ -6,7 +6,7 @@ This repository holds a test project that aims to present a weather tool through
 and the current weather is outputted.
 
 If this zip code's weather has been accessed within the last 30 minutes, the cached weather is shown along with
-an indication of how much time is left before updated whether is fetched.
+an indication of how much time is left before updated weather is fetched.
 
 Many further things could be done with this project, such as an extended weather forecast.
 However, for the sake of time, I decided not to go further.
