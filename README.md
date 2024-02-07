@@ -17,6 +17,6 @@ fire up the server (`rails s`), and proceed to `localhost:3000` to play around w
 A few notes:
 
 - While in development, I used a .ENV file to store the API key for the weather service - however, I have no way of passing the API key
-to the tester, so I ended up leaving it in the code.
+to the tester, so I decided to leave it in the code.
 - In production, I would have included more tests, particularly for the view itself, for the endpoint, and extra test
 cases for the service. However, unfortunately my time is not unlimited, so I left those test cases out.
