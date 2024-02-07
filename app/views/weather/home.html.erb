@@ -1,0 +1,46 @@
+<style>
+  .center { text-align: center; }
+</style>
+
+<div class="center">
+  <% if @weather_object.blank? %>
+    <div>Please input a zip code to get started!</div>
+  <% elsif !@weather_object[:success] %>
+    <p style="color: red"><%= @weather_object[:error] %></p>
+  <% else %>
+    <% if @weather_object[:cached] %>
+      <p style="color: orange">The following weather was retrieved <%= (30 - @weather_object[:time_until_refresh]).round(2) %> minutes ago.
+                                It will refresh in <%= @weather_object[:time_until_refresh] %> minutes</p>
+    <% else %>
+      <p style="color: limegreen">This is the most up-to-date weather forecast!</p>
+    <% end %>
+    <div>
+      <% weather = @weather_object[:weather] %>
+      <% location = weather['location'] %>
+      <% current_weather = weather['current'] %>
+      <div>Location: <%= location['name'] %>, <%= location['region'] %></div>
+      <div>Current Weather: <%= current_weather.dig('condition', 'text') || 'not available!' %></div>
+      <div>Temperature: <%= current_weather['temp_f'] %> F</div>
+      <div>Feels like: <%= current_weather['feelslike_f'] %></div>
+      <div>Wind Gusts: <%= current_weather['gust_mph'] %> mph</div>
+    </div>
+  <% end %>
+</div>
+
+<br>
+<br>
+
+<div class="center">
+  <%= form_with(url: weather_for_zip_path, method: :get) do |form| %>
+    <div>
+      <%= form.label :zip_code, 'Zip Code' %>
+    </div>
+    <div>
+      <%= form.text_field :zip_code, value: @zip_code %>
+    </div>
+    <br>
+    <div>
+      <%= form.submit 'Submit' %>
+    </div>
+  <% end %>
+</div>

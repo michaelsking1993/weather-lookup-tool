@@ -5,11 +5,14 @@ ruby "3.2.2"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.1.2"
 
+# Use dotenv to load ENV variables from a .env file
+gem 'dotenv-rails'
+
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
 
-# Use sqlite3 as the database for Active Record
-gem "sqlite3", "~> 1.4"
+# Use postgresql as the database for Active Record
+gem 'pg', '~> 1.1'
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
@@ -61,6 +64,7 @@ group :development do
 end
 
 group :test do
+  gem "webmock" # use webmock to stub HTTP requests
   gem "database_cleaner-active_record" # use database_cleaner to clean the database between text runs
   gem "factory_bot_rails" # use factory bot for test object creation
   gem "rspec-rails" # use rspec for testing
