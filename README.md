@@ -8,6 +8,10 @@ and the current weather is outputted.
 If this zip code's weather has been accessed within the last 30 minutes, the cached weather is shown along with
 an indication of how much time is left before updated weather is fetched.
 
+If it has not been accessed within the last 30 minutes, the most up-to-date weather is shown.
+
+If the zip code is invalid, an appropriate error message is shown.
+
 Many further things could be done with this project, such as an extended weather forecast.
 However, for the sake of time, I decided not to go further.
 
