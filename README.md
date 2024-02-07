@@ -15,12 +15,19 @@ If the zip code is invalid, an appropriate error message is shown.
 Many further things could be done with this project, such as an extended weather forecast.
 However, for the sake of time, I decided not to go further.
 
-To run the project, clone the repository, run `bundle`, then run `rails db:create`, then `rails db:migrate`,
-fire up the server (`rails s`), and proceed to `localhost:3000` to play around with the project.
+## SETUP
+1. Clone the repository
+2. Run `bundle install`
+3. Run `rails db:create`
+4. Run `rails db:migrate'
+5. Create a `.env` file in the root directory, and copy/paste what is inside of `.env.sample` into it.
+6. Fire up the server: `rails s`
+7. Proceed to `localhost:3000` and play around with the app!
 
 A few notes:
 
-- While in development, I used a .ENV file to store the API key for the weather service - however, I have no way of passing the API key
-to the tester, so I decided to leave it in the code.
+- While in development, I used a .ENV file to store the API key for the weather service - since I have no way of giving the project reviewer
+the API key, I chose to paste this key directly into a .env.sample file. This should never be done in a production environment,
+but as stated above, I have no other way of passing the API key to the tester.
 - In production, I would have included more tests, particularly for the view itself, for the endpoint, and extra test
 cases for the service. However, unfortunately my time is not unlimited, so I left those test cases out.

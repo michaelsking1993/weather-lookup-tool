@@ -6,11 +6,8 @@ class ZipCodeToWeatherService < ApplicationService
   class WeatherServiceApiError < StandardError; end
 
   WEATHER_API_BASE_URL = 'https://api.weatherapi.com/v1'
-  # NOTE: the following line should never be left in production. However, for the purposes of sharing this project in a way that it actually works,
-  # in an environment where the tester might not be able to contact me (the author), I am leaving it here, since no real harm can be done with this
-  # test API key. The correct way to do this would be to leave it in an environment variable, as is shown in the line below the following line.
-  WEATHER_API_KEY = '4944387a91274274952151406240702'
-  # WEATHER_API_KEY = ENV['WEATHER_API_KEY']
+  # see .env.sample for the following API key.
+  WEATHER_API_KEY = ENV['WEATHER_API_KEY']
 
   def initialize(zip_code)
     @zip_code = zip_code
