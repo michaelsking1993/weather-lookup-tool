@@ -17,7 +17,7 @@ class ZipCodeToWeatherService < ApplicationService
   end
 
   def call
-    zip_code = ZipCode.find_or_create_by(zip_code: @zip_code)
+    zip_code = ZipCode.find_or_initialize_by(zip_code: @zip_code)
     if zip_code.valid?
       # if no weather is saved, or if the weather was saved more than 30 minutes ago, get the weather again.
       # Otherwise, return the cached weather along with the amount of time until refresh.
