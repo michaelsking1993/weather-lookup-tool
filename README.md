@@ -2,17 +2,16 @@
 
 ## Weather Tool
 
-This repository holds a test project that aims to present a weather tool through which a zip code is inputted,
-and the current weather is outputted.
+This repository holds a weather tool, through which a zip code is inputted, and the current weather is outputted.
 
-If this zip code's weather has been accessed within the last 30 minutes, the cached weather is shown along with
-an indication of how much time is left before updated weather is fetched.
+If this zip code's weather has been fetched within the last 30 minutes, the cached weather is shown along with an indication of how much time is left before updated weather is fetched.
 
-If it has not been accessed within the last 30 minutes, the most up-to-date weather is shown.
+If it has not been accessed within the last 30 minutes, the most up-to-date weather is fetched from the weather API and shown.
 
-If the zip code is invalid, an appropriate error message is shown.
+If the zip code is invalid, or if the API gives an error, an appropriate error message is shown.
 
-Many further things could be done with this project, such as an extended weather forecast.
+Many further things could be done with this project, such as an extended weather forecast, and an expanded test suite for the view.
+
 However, for the sake of time, I decided not to go further.
 
 ## SETUP
@@ -24,10 +23,11 @@ However, for the sake of time, I decided not to go further.
 6. Fire up the server: `rails s`
 7. Proceed to `localhost:3000` and play around with the app!
 
-A few notes:
+## A few notes
 
+- I would like to cache the weather in Redis in the future. Caching in the database is sufficient for a demonstration of caching logic, however, as scale is reached, Redis will be much faster, and easy to implement.
+- As this app scaled and/or expanded, I would like to use the VCR gem for recording actual API responses in the test suite, instead of copy/pasting the main part of the response into the specs like I did. However, for this sample application, I didn't consider it necessary to implement the VCR gem.
 - While in development, I used a .ENV file to store the API key for the weather service - since I have no way of giving the project reviewer
 the API key, I chose to paste this key directly into a .env.sample file. This should never be done in a production environment,
 but as stated above, I have no other way of passing the API key to the tester.
-- In production, I would have included more tests, particularly for the view itself, for the endpoint, and extra test
-cases for the service. However, unfortunately my time is not unlimited, so I left those test cases out.
+- In production, I would have included more tests, particularly for the view itself, and for the endpoints. However, unfortunately my time is not unlimited, so I left those test cases out and chose to test the weather service specifically.

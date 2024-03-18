@@ -1,28 +1,37 @@
-<style>
-  .center { text-align: center; }
-</style>
-
 <div class="center">
   <% if @weather_object.blank? %>
     <div>Please input a zip code to get started!</div>
   <% elsif !@weather_object[:success] %>
-    <p style="color: red"><%= @weather_object[:error] %></p>
+    <p class="red"><%= @weather_object[:error] %></p>
   <% else %>
-    <% if @weather_object[:cached] %>
-      <p style="color: orange">The following weather was retrieved <%= (30 - @weather_object[:time_until_refresh]).round(2) %> minutes ago.
-                                It will refresh in <%= @weather_object[:time_until_refresh] %> minutes</p>
+    <% if @weather_object[:pulled_from_cache] %>
+      <div class="orange">
+        <!-- NOTE: the following methods (time_ago_in_words, and distance_of_time_in_words) will include seconds when their values are less than 1.5. -->
+        <p>
+          The following weather was retrieved <strong><%= retrieved_at_minutes_ago(@zip_code) %> ago.</strong>
+          <br>
+          It will refresh in <strong><%= will_refresh_at_in_minutes(@zip_code) %>.</strong>
+        </p>.
+      </div>
     <% else %>
-      <p style="color: limegreen">This is the most up-to-date weather forecast!</p>
+      <p class="limegreen">
+        This is the most up-to-date weather forecast!
+      </p>
     <% end %>
     <div>
       <% weather = @weather_object[:weather] %>
       <% location = weather['location'] %>
       <% current_weather = weather['current'] %>
-      <div>Location: <%= location['name'] %>, <%= location['region'] %></div>
-      <div>Current Weather: <%= current_weather.dig('condition', 'text') || 'not available!' %></div>
-      <div>Temperature: <%= current_weather['temp_f'] %> F</div>
-      <div>Feels like: <%= current_weather['feelslike_f'] %></div>
-      <div>Wind Gusts: <%= current_weather['gust_mph'] %> mph</div>
+      
+      <div>Location: <strong><%= location['name'] %>, <%= location['region'] %></strong></div>
+      <br>
+      <div>Current Weather: <strong><%= current_weather.dig('condition', 'text') || 'not available!' %></strong></div>
+      <br>
+      <div>Temperature: <strong><%= current_weather['temp_f'] %> F</strong></div>
+      <br>
+      <div>Feels like: <strong><%= current_weather['feelslike_f'] %> F</strong></div>
+      <br>
+      <div>Wind Gusts: <strong><%= current_weather['gust_mph'] %> mph</strong></div>
     </div>
   <% end %>
 </div>
@@ -36,7 +45,7 @@
       <%= form.label :zip_code, 'Zip Code' %>
     </div>
     <div>
-      <%= form.text_field :zip_code, value: @zip_code %>
+      <%= form.text_field :zip_code, value: @zip_code&.zip_code %>
     </div>
     <br>
     <div>
