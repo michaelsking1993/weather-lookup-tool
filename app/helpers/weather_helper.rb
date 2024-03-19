@@ -11,4 +11,12 @@ module WeatherHelper
   def will_refresh_at_in_minutes(zip_code)
     distance_of_time_in_words(DateTime.current, zip_code.weather_retrieved_at + 30.minutes, include_seconds: true)
   end
+  
+  # input: degrees in fahrenheit
+  # output: degrees in celsius
+  def fahrenheit_to_celsius(fahrenheit_degrees)
+    celsius = (fahrenheit_degrees - 32) * (5.0/9.0)
+    
+    celsius.round(2)
+  end
 end
