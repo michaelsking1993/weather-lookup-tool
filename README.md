@@ -25,9 +25,10 @@ However, for the sake of time, I decided not to go further.
 
 ## A few notes
 
-- I would like to cache the weather in Redis in the future. Caching in the database is sufficient for a demonstration of caching logic, however, as scale is reached, Redis will be much faster, and easy to implement.
+- As application scales, weather reports should be stored in Redis. Caching in the database is sufficient for a demonstration of caching logic, however, as scale is reached, Redis will be much faster, and easy to implement.
 - As this app scaled and/or expanded, I would like to use the VCR gem for recording actual API responses in the test suite, instead of copy/pasting the main part of the response into the specs like I did. However, for this sample application, I didn't consider it necessary to implement the VCR gem.
 - While in development, I used a .ENV file to store the API key for the weather service - since I have no way of giving the project reviewer
 the API key, I chose to paste this key directly into a .env.sample file. This should never be done in a production environment,
 but as stated above, I have no other way of passing the API key to the tester.
-- In production, I would have included more tests, particularly for the view itself, and for the endpoints. However, unfortunately my time is not unlimited, so I left those test cases out and chose to test the weather service specifically.
+- In production, I would have included tests for the view itself, and for the endpoints.
+- Chose JSONB for weather instead of JSON because JSONB is faster for reads, and thus will perform better with scale.

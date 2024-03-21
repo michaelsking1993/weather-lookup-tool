@@ -28,8 +28,6 @@ class WeatherForZipCodeService < ApplicationService
         { success: true, weather: zip_code.weather_forecast, pulled_from_cache: false }
       else
         # fetch cached weather
-        time_until_refresh = time_until_refresh(zip_code.weather_retrieved_at).round(2)
-        
         { success: true, weather: zip_code.weather_forecast, pulled_from_cache: true }
       end
     else
@@ -40,15 +38,6 @@ class WeatherForZipCodeService < ApplicationService
   end
 
   private
-
-  # input: datetime of the last time the weather was retrieved
-  # output: how long (in minutes) until the next refresh, where each refresh happens at 30 minute intervals.
-  def time_until_refresh(last_retrieved_at)
-    next_refresh_at = last_retrieved_at + 30.minutes # the next refresh happens 30 minutes after the last retrieval
-    time_until_next_refresh = next_refresh_at - DateTime.current # the difference (in seconds) between the next refresh time, and the current time
-    
-    time_until_next_refresh / 1.minute # converts that difference into minutes
-  end
   
   
   # Fetches weather forecast from our selected weather API. Returns the parsed body of the weather API's response.
