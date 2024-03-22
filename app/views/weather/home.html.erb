@@ -1,37 +1,54 @@
 <div class="center">
   <% if @weather_object.blank? %>
-    <div>Please input a zip code to get started!</div>
-  <% elsif !@weather_object[:success] %>
-    <p class="red"><%= @weather_object[:error] %></p>
+    <div id="get-started-instructions">
+      Please input a zip code to get started!
+    </div>
+  <% elsif @weather_object[:error].present? %>
+    <p id="error-text" class="red"><%= @weather_object[:error] %></p>
   <% else %>
-    <% if @weather_object[:pulled_from_cache] %>
-      <div class="orange">
-        <!-- NOTE: the following methods (time_ago_in_words, and distance_of_time_in_words) will include seconds when their values are less than 1.5. -->
-        <p>
-          The following weather was retrieved <strong><%= retrieved_at_minutes_ago(@zip_code) %> ago.</strong>
-          <br>
-          It will refresh in <strong><%= will_refresh_at_in_minutes(@zip_code) %>.</strong>
-        </p>.
-      </div>
-    <% else %>
-      <p class="limegreen">
-        This is the most up-to-date weather forecast!
-      </p>
-    <% end %>
-    <div>
+    <!-- INFO ABOUT WHEN THE WEATHER WAS FETCHED -->
+    <div id="weather-fetched-at-information">
+      <% if @weather_object[:pulled_from_cache] %>
+        <div id="weather-pulled-from-cache-info" class="orange">
+          <p>
+            The following weather was retrieved <strong><%= retrieved_at_minutes_ago(@zip_code.weather_retrieved_at) %> ago.</strong>
+            <br>
+            It will refresh in <strong><%= will_refresh_at_in_minutes(@zip_code.weather_retrieved_at) %>.</strong>
+          </p>.
+        </div>
+      <% else %>
+        <p id="up-to-date-weather-info" class="limegreen">
+          This is the most up-to-date weather forecast!
+        </p>
+      <% end %>
+    </div>
+    
+    <!-- ACTUAL WEATHER INFORMATION -->
+    <div id="weather-information">
       <% weather = @weather_object[:weather] %>
-      <% location = weather['location'] %>
+      <% location_info = weather['location'] %>
       <% current_weather = weather['current'] %>
       
-      <div>Location: <strong><%= location['name'] %>, <%= location['region'] %> (<%= @zip_code&.zip_code %>)</strong></div>
+      <div id="location">
+        Location: <strong><%= location_info&.[]('name') %>, <%= location_info&.[]('region') %> (<%= @zip_code&.zip_code %>)</strong>
+      </div>
       <br>
-      <div>Current Weather: <strong><%= current_weather.dig('condition', 'text') || 'not available!' %></strong></div>
+      <div id="current-weather">
+        Current Weather: <strong><%= current_weather.dig('condition', 'text') || 'not available!' %></strong>
+      </div>
       <br>
-      <div>Temperature: <strong><%= current_weather['temp_f'] %> F (<%= fahrenheit_to_celsius(current_weather['temp_f']) %> C)</strong></div>
+      <!-- `&#8457` => fahrenheit symbol. `&#8451;` => celsius symbol. -->
+      <div id="current-temperature">
+        Temperature: <strong><%= current_weather['temp_f'] %> &#8457; (<%= current_weather['temp_c'] %> &#8451;)</strong>
+      </div>
       <br>
-      <div>Feels like: <strong><%= current_weather['feelslike_f'] %> F</strong></div>
+      <div id="feels-like-temperature">
+        Feels like: <strong><%= current_weather['feelslike_f'] %> &#8457; (<%= current_weather['feelslike_c'] %> &#8451;)</strong>
+      </div>
       <br>
-      <div>Wind Gusts: <strong><%= current_weather['gust_mph'] %> mph</strong></div>
+      <div id="wind-gusts">
+        Wind Gusts: <strong><%= current_weather['gust_mph'] %> mph (<%= current_weather['gust_kph'] %> kph)</strong>
+      </div>
     </div>
   <% end %>
 </div>
@@ -39,6 +56,7 @@
 <br>
 <br>
 
+<!-- FORM TO INPUT A ZIP CODE -->
 <div class="center">
   <%= form_with(url: weather_for_zip_path, method: :get) do |form| %>
     <div>

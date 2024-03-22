@@ -16,29 +16,28 @@ class WeatherForZipCodeService < ApplicationService
 
   # input: an ActiveRecord zip-code object
   # output: a hash object in the following format, used by the view to render appropriate information for the person viewing the weather:
-  #           { success: true/false, error: string[if applicable], pulled_from_cache: true/false }
+  #           { error: string[if applicable], pulled_from_cache: true/false[if applicable], weather: hash[if applicable] }
   def call
-    if zip_code.valid?
-      # if no weather is saved, or if the weather was saved more than 30 minutes ago, get the weather again.
-      # Otherwise, return the cached weather along with the amount of time until refresh.
-      if zip_code.weather_forecast.blank? || zip_code.weather_retrieved_at < 30.minutes.ago
-        # fetch new weather. update! will persist the newly initialized zip code object if it does not already exist.
-        zip_code.update!(weather_retrieved_at: DateTime.current, weather_forecast: get_weather_for_zip)
-        
-        { success: true, weather: zip_code.weather_forecast, pulled_from_cache: false }
-      else
-        # fetch cached weather
-        { success: true, weather: zip_code.weather_forecast, pulled_from_cache: true }
-      end
-    else
-      { success: false, error: zip_code.errors.full_messages.join('; ') }
+    current_time = DateTime.current
+    if zip_code.valid? && needs_updated_weather?
+      zip_code.update!(weather_retrieved_at: current_time, weather_forecast: get_weather_for_zip)
     end
+    
+    { 
+      weather: zip_code.weather_forecast.presence, 
+      pulled_from_cache: zip_code.id && zip_code.weather_retrieved_at != current_time, # `zip_code.id &&` allows us to remove this field (through .compact) if zip_code was invalid.
+      error: zip_code.errors.full_messages.join('; ').presence 
+    }.compact
   rescue WeatherServiceApiError => e 
-    { success: false, error: e.message }
+    { error: e.message }
   end
 
   private
   
+  def needs_updated_weather?
+    # we need to fetch updated weather if a) there is no weather for this zip_code object (i.e. if it's new), or b) the weather was retrieved more than 30 minutes ago.
+    zip_code.weather_forecast.blank? || zip_code.weather_retrieved_at < 30.minutes.ago
+  end
   
   # Fetches weather forecast from our selected weather API. Returns the parsed body of the weather API's response.
   def get_weather_for_zip
